@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # zsh install procedure
+sudo apt-get -y install zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 
 # neobundle install procedure
@@ -62,6 +63,8 @@ function docker_install {
 	    software-properties-common	
 	curl -fsSL https://apt.dockerproject.org/gpg | sudo apt-key add -
 	apt-key fingerprint 58118E89F3A912897C070ADBF76221572C52609D
+	sudo add-apt-repository \
+		"deb https://apt.dockerproject.org/repo/ubuntu-$(lsb_release -cs) main"
         sudo apt-get update
         sudo apt-get install docker-engine
 	apt-cache madison docker-engine
@@ -79,4 +82,3 @@ function findcoo_setup {
     docker_install
 }
 
-findcoo_setup
