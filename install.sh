@@ -4,7 +4,7 @@ OSTYPE=$(uname)
 
 case $OSTYPE in
     Linux)
-        issue=($(cat /etc/issue | grep Ubuntu))
+        issue=$(cat /etc/issue | grep Ubuntu | awk '{print $1}')
 
         if [ ! -z $issue ]; then
             OSTYPE=Ubuntu
@@ -79,6 +79,7 @@ function file_setup {
     if [ ! -d "$HOME/.config/nvim" ]; then
         echo "install vim configuration file"
         mkdir -p ~/.config/nvim
+        cp init.vim ~/.config/nvim/
     else
         echo "vim configuration already installed"
     fi
@@ -172,3 +173,18 @@ function setup {
     install_fzf
     install_nvm
 }
+
+case $1 in
+    docker) install_docker
+        ;;
+    pyenv) install_docker
+        ;;
+    go) install_go
+        ;;
+    fzf) install_fzf
+        ;;
+    nvm) install_nvm
+        ;;
+    all) setup
+        ;;
+esac 
