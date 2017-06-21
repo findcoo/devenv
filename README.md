@@ -16,3 +16,4 @@ install develop dependencies
 * [docker](https://www.docker.com)
 * [fzf](https://github.com/junegunn/fzf)
 * [go](https://golang.org)
+* [nvm](https://github.com/creationix/nvm)

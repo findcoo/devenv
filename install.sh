@@ -3,8 +3,9 @@
 OSTYPE=$(uname)
 
 case $OSTYPE in
-    LINUX)
-        local issue=$(cat /etc/issue | grep Ubuntu)
+    Linux)
+        issue=($(cat /etc/issue | grep Ubuntu))
+
         if [ ! -z $issue ]; then
             OSTYPE=Ubuntu
         else
@@ -27,7 +28,7 @@ function install_zsh {
     case $OSTYPE in
         Darwin) brew install zsh
             ;;
-        Ubuntu) sudo apt-get -y install zsh
+        Ubuntu) apt-get -y install zsh
             ;;
     esac
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
@@ -51,18 +52,18 @@ function install_neovim {
     case $OSTYPE in
         Ubuntu)
             if [ ! -f "/usr/bin/nvim" ]; then
-                sudo apt-get install -y software-properties-common python-software-properties
-                sudo add-apt-repository ppa:neovim-ppa/stable
-                sudo apt-get update
-                sudo apt-get build-dep python-dev python3-dev
-                sudo apt-get install -y python-dev python3-dev neovim
+                apt-get install -y software-properties-common python-software-properties
+                add-apt-repository ppa:neovim-ppa/stable
+                apt-get update
+                apt-get build-dep python-dev python3-dev
+                apt-get install -y python-dev python3-dev neovim
 
-                sudo update-alternatives --install /usr/bin/vi vi /usr/bin/nvim 60
-                sudo update-alternatives --config vi
-                sudo update-alternatives --install /usr/bin/vim vim /usr/bin/nvim 60
-                sudo update-alternatives --config vim 
-                sudo update-alternatives --install /usr/bin/editor editro /usr/bin/nvim 60
-                sudo update-alternatives --config editor
+                update-alternatives --install /usr/bin/vi vi /usr/bin/nvim 60
+                update-alternatives --config vi
+                update-alternatives --install /usr/bin/vim vim /usr/bin/nvim 60
+                update-alternatives --config vim 
+                update-alternatives --install /usr/bin/editor editro /usr/bin/nvim 60
+                update-alternatives --config editor
             else
                 echo "neovim already installed"
             fi
@@ -100,21 +101,21 @@ function install_pyenv {
 function install_docker {
     echo "install docker"
     if [ ! -f "/usr/bin/docker" ]; then
-        sudo apt-get install -y --no-install-recommends \
+        apt-get install -y --no-install-recommends \
             apt-transport-https \
             ca-certificates \
             curl \
             software-properties-common	
-        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-        sudo apt-key fingerprint 0EBFCD88
-        sudo add-apt-repository \
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+        apt-key fingerprint 0EBFCD88
+        add-apt-repository \
             "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
             $(lsb_release -cs) \
             stable"
-        sudo apt-get update
-        sudo apt-get install -y docker-ce
-        sudo groupadd docker
-        sudo usermod -aG docker $(whoami)
+        apt-get update
+        apt-get install -y docker-ce
+        groupadd docker
+        usermod -aG docker $(whoami)
     fi
 
     if [ $OSTYPE == "Darwin" ]; then
@@ -129,6 +130,7 @@ function install_fzf {
         Ubuntu)
             git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
             ~/.fzf/install
+	    apt-get install silversearcher-ag
             ;;
         Darwin)
             brew install fzf
@@ -143,13 +145,19 @@ function install_go {
     case $OSTYPE in
         Ubuntu)
             wget "https://storage.googleapis.com/golang/go1.8.3.linux-amd64.tar.gz"
-            sudo tar -C /usr/local -xzf go1.8.3.linux-amd64.tar.gz
+            tar -C /usr/local -xzf go1.8.3.linux-amd64.tar.gz
             ;;
         Darwin)
             echo "visit https://golang.org/doc/install"
             ;;
     esac
     rm "go1.8.3.linux-amd64.tar.gz"
+}
+
+# install nvm
+function install_nvm {
+	echo "install nvm"
+	curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh | bash
 }
 
 function setup {
@@ -162,4 +170,5 @@ function setup {
     install_docker
     install_go
     install_fzf
+    install_nvm
 }
