@@ -10,7 +10,6 @@ eval "$(pyenv virtualenv-init -)"
 # go
 export GOROOT=/usr/local/go
 export GOPATH=$HOME/go
-export PATH=$PATH:$GOROOT/bin
 
 # neovim
 export EDITOR=nvim
@@ -22,3 +21,5 @@ export NVM_DIR="$HOME/.nvm"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 export FZF_DEFAULT_COMMAND='ag -g ""'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+
+export PATH=$PATH:$GOROOT/bin
