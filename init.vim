@@ -24,9 +24,6 @@ NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'Lokaltog/powerline'
 NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'ervandew/supertab'
-NeoBundle 'pangloss/vim-javascript'
-NeoBundle 'kchmck/vim-coffee-script'
-NeoBundle 'marijnh/tern_for_vim'
 NeoBundle 'honza/vim-snippets'
 NeoBundle 'SirVer/ultisnips'
 NeoBundle 'chase/vim-ansible-yaml'
@@ -42,10 +39,12 @@ NeoBundle 'wakatime/vim-wakatime'
 NeoBundle 'mattn/emmet-vim'
 NeoBundle 'pangloss/vim-javascript'
 NeoBundle 'mxw/vim-jsx'
-NeoBundle 'kchmck/vim-coffee-script'
 NeoBundle 'godlygeek/tabular'
 NeoBundle 'ternjs/tern_for_vim'
-NeoBundle 'millermedeiros/vim-esformatter'
+NeoBundle 'haya14busa/incsearch.vim'
+NeoBundle 'haya14busa/incsearch-fuzzy.vim'
+NeoBundle 'haya14busa/incsearch-easymotion.vim'
+NeoBundle 'easymotion/vim-easymotion'
 
 
 NeoBundleLazy 'lambdalisue/vim-pyenv', {
@@ -184,7 +183,7 @@ vnoremap <silent> <leader>es :EsformatterVisual<CR>
 " You can use other keymappings like <C-l> instead of <CR> if you want to
 " use these mappings as default search and somtimes want to move cursor with
 " EasyMotion.
-" " <Leader>f{char} to move to {char}
+" <Leader>f{char} to move to {char}
 map  <Leader>f <Plug>(easymotion-bd-f)
 nmap <Leader>f <Plug>(easymotion-overwin-f)
 
@@ -224,3 +223,5 @@ function! s:config_easyfuzzymotion(...) abort
 endfunction
 
 noremap <silent><expr> <Space>/ incsearch#go(<SID>config_easyfuzzymotion())
+
+set guicursor=

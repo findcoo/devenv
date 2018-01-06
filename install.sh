@@ -145,14 +145,14 @@ function install_go {
     echo "install go"
     case $OSTYPE in
         Ubuntu)
-            wget "https://storage.googleapis.com/golang/go1.8.3.linux-amd64.tar.gz"
-            tar -C /usr/local -xzf go1.8.3.linux-amd64.tar.gz
+            wget "https://storage.googleapis.com/golang/go1.9.2.linux-amd64.tar.gz"
+            tar -C /usr/local -xzf go1.9.2.linux-amd64.tar.gz
             ;;
         Darwin)
             echo "visit https://golang.org/doc/install"
             ;;
     esac
-    rm "go1.8.3.linux-amd64.tar.gz"
+    rm "go1.9.2.linux-amd64.tar.gz"
 }
 
 # install nvm
@@ -177,7 +177,7 @@ function setup {
 case $1 in
     docker) install_docker
         ;;
-    pyenv) install_docker
+    pyenv) install_pyenv
         ;;
     go) install_go
         ;;
