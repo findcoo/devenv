@@ -1,3 +1,67 @@
+" neobundle
+
+if &compatible
+    set nocompatible
+endif
+
+" Plug
+call plug#begin('~/.vim/plugged')
+    " node
+    Plug 'moll/vim-node'
+    " python
+    Plug 'nvie/vim-flake8'
+    Plug 'tell-k/vim-autopep8'
+    Plug 'davidhalter/jedi-vim'
+    Plug 'zchee/deoplete-jedi'
+    " go
+    Plug 'fatih/vim-go'
+    Plug 'jodosha/vim-godebug'
+    " java
+    Plug 'artur-shaik/vim-javacomplete2'
+    " javascript
+    Plug 'mattn/emmet-vim'
+    Plug 'pangloss/vim-javascript'
+    Plug 'mxw/vim-jsx'
+    Plug 'godlygeek/tabular'
+    Plug 'othree/jspc.vim'
+    Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
+    Plug 'flowtype/vim-flow', { 'autoload': { 'filetypes': 'javascript' } }
+    " common tools
+    Plug 'Shougo/deoplete.nvim', { 'do': 'UpdateRemotePlugins' }
+    Plug 'neomake/neomake'
+    Plug 'mtth/scratch.vim'
+    Plug 'Lokaltog/powerline'
+    Plug 'Shougo/unite.vim'
+    Plug 'ervandew/supertab'
+    Plug 'honza/vim-snippets'
+    Plug 'SirVer/ultisnips'
+    Plug 'chase/vim-ansible-yaml'
+    " Plug 'scrooloose/syntastic'
+    Plug 'robbles/logstash.vim'
+    Plug 'wakatime/vim-wakatime'
+    Plug 'junegunn/fzf'
+    Plug 'junegunn/fzf.vim'
+    Plug 'haya14busa/incsearch.vim'
+    Plug 'haya14busa/incsearch-fuzzy.vim'
+    Plug 'haya14busa/incsearch-easymotion.vim'
+    Plug 'easymotion/vim-easymotion'
+    Plug 'junegunn/vim-emoji'
+    Plug 'mzlogin/vim-markdown-toc'
+    Plug 'aklt/plantuml-syntax'
+    Plug 'plasticboy/vim-markdown'
+    Plug '0x84/vim-coderunner'
+    Plug 'vim-airline/vim-airline'
+    Plug 'vim-airline/vim-airline-themes'
+    Plug 'dhruvasagar/vim-table-mode'
+    Plug 'Shougo/vimfiler.vim'
+    Plug 'airblade/vim-rooter'
+    " git
+    Plug 'tpope/vim-fugitive'
+    Plug 'airblade/vim-gitgutter'
+call plug#end()
+filetype plugin indent on
+syntax enable
+
 " text editing
 set nu
 set autochdir
@@ -5,6 +69,7 @@ syntax on
 
 set tabstop=4 softtabstop=4 shiftwidth=4 expandtab autoindent fileformat=unix
 au FileType go set tabstop=2 softtabstop=2 shiftwidth=2 expandtab autoindent
+au FileType javascript set tabstop=2 softtabstop=2 shiftwidth=2 expandtab autoindent
 au FileType python set textwidth=79
 
 set cursorline
@@ -13,99 +78,27 @@ highlight LineNr ctermfg=grey
 
 au FileType yaml setl ai ts=1 sts=1 sw=1
 
+" java
+au FileType java setl omnifunc=javacomplete#Complete
 
-" neobundle
-set runtimepath^=~/.vim/bundle/neobundle.vim/
-set rtp+=/usr/local/opt/fzf
+" Deoplete
+let g:deoplete#enable_at_start_up = 1
 
-call neobundle#begin(expand('~/.vim/bundle/'))
-NeoBundleFetch 'Shougo/neobundle.vim'
-NeoBundle 'tpope/vim-fugitive'
-NeoBundle 'Lokaltog/powerline'
-NeoBundle 'scrooloose/nerdtree'
-NeoBundle 'ervandew/supertab'
-NeoBundle 'honza/vim-snippets'
-NeoBundle 'SirVer/ultisnips'
-NeoBundle 'chase/vim-ansible-yaml'
-NeoBundle 'nvie/vim-flake8'
-NeoBundle 'scrooloose/syntastic'
-NeoBundle 'tell-k/vim-autopep8'
-NeoBundle 'robbles/logstash.vim'
-NeoBundle 'fatih/vim-go'
-NeoBundle 'junegunn/fzf'
-NeoBundle 'junegunn/fzf.vim'
-NeoBundle 'jodosha/vim-godebug'
-NeoBundle 'wakatime/vim-wakatime'
-NeoBundle 'mattn/emmet-vim'
-NeoBundle 'pangloss/vim-javascript'
-NeoBundle 'mxw/vim-jsx'
-NeoBundle 'godlygeek/tabular'
-NeoBundle 'ternjs/tern_for_vim'
-NeoBundle 'haya14busa/incsearch.vim'
-NeoBundle 'haya14busa/incsearch-fuzzy.vim'
-NeoBundle 'haya14busa/incsearch-easymotion.vim'
-NeoBundle 'easymotion/vim-easymotion'
+" Jedi
+let g:python_host_prog = "/Users/kakaopay/.pyenv/shims/python"
+let g:python3_host_prog = "/Users/kakaopay/.pyenv/shims/python3"
 
-
-NeoBundleLazy 'lambdalisue/vim-pyenv', {
-    \ 'depends': ['davidhalter/jedi-vim'],
-    \ 'autoload': {
-    \   'filetypes': ['python', 'python3'],
-    \ }}
-call neobundle#end()
-
-filetype plugin indent on
-
-NeoBundleCheck
-
-" python plugins
-" python-mode setting off
-let g:pymode_rope = 0
-
-" Documentation
-let g:pymode_doc = 1
-let g:pymode_doc_key = 'K'
-
-"Linting
-let g:pymode_lint = 1
-let g:pymode_lint_checker = "pep8"
-" Auto check on save
-let g:pymode_lint_write = 1
-
-" Support virtualenv
-let g:pymode_virtualenv = 1
-
-" Enable breakpoints plugin
-let g:pymode_breakpoint = 1
-let g:pymode_breakpoint_bind = '<leader>b'
-
-" syntax highlighting
-let g:pymode_syntax = 1
-let g:pymode_syntax_all = 1
-let g:pymode_syntax_indent_errors = g:pymode_syntax_all
-let g:pymode_syntax_space_errors = g:pymode_syntax_all
-
-" Don't autofold code
-let g:pymode_folding = 0
-
-let g:SupperTabDefaultCompletionType = 'context'
-
-"let g:jedi#force_py_version=3
-
-let g:python_host_prog = "/usr/bin/python2"
-let g:python3_host_prog = "/usr/bin/python3"
-
-if jedi#init_python()
-    function! s:jedi_auto_force_py_version() abort
-        let major_version=pyenv#python#get_internal_major_version()
-        call jedi#force_py_version(major_version)
-    endfunction
-    augroup vim-pyenv-custom-augroup
-        autocmd! *
-        autocmd User vim-pyenv-activate-post    call s:jedi_auto_force_py_version()
-        autocmd User vim-pyenv-deactivate-post  call s:jedi_auto_force_py_version()
-    augroup END
-endif
+" if jedi#init_python()
+"     function! s:jedi_auto_force_py_version() abort
+"         let major_version=pyenv#python#get_internal_major_version()
+"         call jedi#force_py_version(major_version)
+"     endfunction
+"     augroup vim-pyenv-custom-augroup
+"         autocmd! *
+"         autocmd User vim-pyenv-activate-post    call s:jedi_auto_force_py_version()
+"         autocmd User vim-pyenv-deactivate-post  call s:jedi_auto_force_py_version()
+"     augroup END
+" endif
 
 " UltiSnips
 let g:UltiSnipsExpandTrigger="<s-tab>"
@@ -113,12 +106,6 @@ let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 let g:UltiSnipsSnippetsDir="~/.vim/bundle/vim-snippets/UltiSnips"
 let g:UltiSnipsEditSplit="vertical"
-
-" eclim
-au FileType java let g:EclimCompletionMethod="omnifunc"
-au FileType java nmap <Leader>d :JavaSearch -a edit<ENTER>
-au FileType java nmap <Leader>s :JavaSearch -a vsplit<ENTER>
-
 
 " golang
 au FileType go nmap <Leader>ds <Plug>(go-def-split)
@@ -138,9 +125,9 @@ au FileType go nmap <Leader>c :GoCallstack<ENTER>
 
 let g:go_fmt_command = "goimports"
 
-let g:go_metalinter_enabled = ['vet', 'golint', 'errcheck']
+let g:go_metalinter_enabled = ['golint', 'errcheck']
 let g:go_metalinter_autosave = 1
-let g:go_metalinter_autosave_enabled = ['vet', 'golint']
+let g:go_metalinter_autosave_enabled = ['golint']
 set autowrite
 let g:go_list_type = "quickfix"
 
@@ -160,11 +147,12 @@ set updatetime=50
 let g:go_auto_sameids = 1
 let g:go_bin_path = expand("~/.gotools")
 
-let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
+let g:syntastic_go_checkers = ['golint', 'errcheck']
 let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
 
 " supertab
 let g:SuperTabDefaultCompletionType = 'context'
+let g:SuperTabClosePreviewOnPopupClose = 1
 
 " java
 au FileType java nmap <Leader>d :JavaSearch -a edit<ENTER>
@@ -174,10 +162,8 @@ au FileType java nmap <Leader>s :JavaSearch -a vsplit<ENTER>
 au BufNewFile,BufRead Jenkinsfile setf groovy
 
 " javascript
-let g:syntastic_javascript_checkers = ['eslint']
+autocmd FileType javascript setlocal omnifunc=tern#Complete
 let g:jsx_ext_required = 0
-nnoremap <silent> <leader>es :Esformatter<CR>
-vnoremap <silent> <leader>es :EsformatterVisual<CR>
 
 "easymotion
 " You can use other keymappings like <C-l> instead of <CR> if you want to
@@ -225,3 +211,134 @@ endfunction
 noremap <silent><expr> <Space>/ incsearch#go(<SID>config_easyfuzzymotion())
 
 set guicursor=
+
+let s:jar_path = "~/.vim/bundle/vim-slumloard/plantuml.jar"
+
+" markdown
+let g:vim_markdown_folding_disabled = 1
+augroup emoji_complete
+    autocmd!
+    autocmd FileType markdown setlocal completefunc=emoji#complete
+augroup END
+
+" scratch
+let g:scratch_autohide = 1
+
+" unite
+if executable('hw')
+    " Use hw (highway)
+    " https://github.com/tkengo/highway
+    let g:unite_source_grep_command = 'hw'
+    let g:unite_source_grep_default_opts = '--no-group --no-color'
+    let g:unite_source_grep_recursive_opt = ''
+elseif executable('ag')
+    " Use ag (the silver searcher)
+    " https://github.com/ggreer/the_silver_searcher
+    let g:unite_source_grep_command = 'ag'
+    let g:unite_source_grep_default_opts =
+                \ '-i --line-numbers --nocolor ' .
+                \ '--nogroup --hidden --ignore ' .
+                \ '''.hg'' --ignore ''.svn'' --ignore' .
+                \ ' ''.git'' --ignore ''.bzr'''
+    let g:unite_source_grep_recursive_opt = ''
+elseif executable('pt')
+    " Use pt (the platinum searcher)
+    " https://github.com/monochromegane/the_platinum_searcher
+    let g:unite_source_grep_command = 'pt'
+    let g:unite_source_grep_default_opts = '--nogroup --nocolor'
+    let g:unite_source_grep_recursive_opt = ''
+elseif executable('ack-grep')
+    " Use ack
+    " http://beyondgrep.com/
+    let g:unite_source_grep_command = 'ack-grep'
+    let g:unite_source_grep_default_opts =
+                \ '-i --no-heading --no-color -k -H'
+    let g:unite_source_grep_recursive_opt = ''
+elseif executable('ack')
+    let g:unite_source_grep_command = 'ack'
+    let g:unite_source_grep_default_opts = '-i --no-heading' .
+                \ ' --no-color -k -H'
+    let g:unite_source_grep_recursive_opt = ''
+elseif executable('jvgrep')
+    " Use jvgrep
+    " https://github.com/mattn/jvgrep
+    let g:unite_source_grep_command = 'jvgrep'
+    let g:unite_source_grep_default_opts =
+                \ '-i --exclude ''\.(git|svn|hg|bzr)'''
+    let g:unite_source_grep_recursive_opt = '-R'
+elseif executable('beagrep')
+    " Use beagrep
+    " https://github.com/baohaojun/beagrep
+    let g:unite_source_grep_command = 'beagrep'
+endif
+
+let g:unite_source_menu_menus = get(g:,'unite_source_menu_menus',{})
+let g:unite_source_menu_menus.git = {
+    \ 'description' : '            gestionar repositorios git
+        \                            ⌘ [espacio]g',
+    \}
+let g:unite_source_menu_menus.git.command_candidates = [
+    \['▷ tig                                                        ⌘ ,gt',
+        \'normal ,gt'],
+    \['▷ git status       (Fugitive)                                ⌘ ,gs',
+        \'Gstatus'],
+    \['▷ git diff         (Fugitive)                                ⌘ ,gd',
+        \'Gdiff'],
+    \['▷ git commit       (Fugitive)                                ⌘ ,gc',
+        \'Gcommit'],
+    \['▷ git log          (Fugitive)                                ⌘ ,gl',
+        \'exe "silent Glog | Unite quickfix"'],
+    \['▷ git blame        (Fugitive)                                ⌘ ,gb',
+        \'Gblame'],
+    \['▷ git stage        (Fugitive)                                ⌘ ,gw',
+        \'Gwrite'],
+    \['▷ git checkout     (Fugitive)                                ⌘ ,go',
+        \'Gread'],
+    \['▷ git rm           (Fugitive)                                ⌘ ,gr',
+        \'Gremove'],
+    \['▷ git mv           (Fugitive)                                ⌘ ,gm',
+        \'exe "Gmove " input("destino: ")'],
+    \['▷ git push         (Fugitive, salida por buffer)             ⌘ ,gp',
+        \'Git! push'],
+    \['▷ git pull         (Fugitive, salida por buffer)             ⌘ ,gP',
+        \'Git! pull'],
+    \['▷ git prompt       (Fugitive, salida por buffer)             ⌘ ,gi',
+        \'exe "Git! " input("comando git: ")'],
+    \['▷ git cd           (Fugitive)',
+        \'Gcd'],
+    \]
+
+nnoremap <silent> <space>g :Unite -silent -start-insert menu:git<CR>
+nnoremap <silent> <C-p> :Unite file_rec<cr>
+nnoremap <silent> <space>/ :Unite grep<cr> 
+
+" vimfiler
+let g:vimfiler_as_default_explorer = 1
+call vimfiler#custom#profile('default', 'context', {
+            \ 'explorer' : 1,
+            \ 'winwidth' : 30,
+            \ 'winminwidth' : 30,
+            \ 'toggle' : 1,
+            \ 'columns' : 'type',
+            \ 'auto_expand': 1,
+            \ 'direction' : 'rightbelow',
+            \ 'parent': 0,
+            \ 'explorer_columns' : 'type',
+            \ 'status' : 1,
+            \ 'safe' : 0,
+            \ 'split' : 1,
+            \ 'hidden': 1,
+            \ 'no_quit' : 1,
+            \ 'force_hide' : 0,
+            \ })
+
+" neomake
+ When writing a buffer (no delay).
+call neomake#configure#automake('w')
+" When writing a buffer (no delay), and on normal mode changes (after 750ms).
+call neomake#configure#automake('nw', 750)
+" When reading a buffer (after 1s), and when writing (no delay).
+call neomake#configure#automake('rw', 1000)
+" Full config: when writing or reading a buffer, and on changes in insert and
+" normal mode (after 1s; no delay when writing).
+call neomake#configure#automake('nrwi', 500)
