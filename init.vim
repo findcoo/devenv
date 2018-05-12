@@ -1,16 +1,27 @@
+" neobundle
+
 if &compatible
     set nocompatible
 endif
 
+" NeoBundleCheck
+
 " Plug
 call plug#begin('~/.vim/plugged')
+if has('nvim')
+      Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+      Plug 'Shougo/deoplete.nvim'
+      Plug 'roxma/nvim-yarp'
+      Plug 'roxma/vim-hug-neovim-rpc'
+endif
+let g:deoplete#enable_at_startup = 1
+
     " node
     Plug 'moll/vim-node'
     " python
     Plug 'nvie/vim-flake8'
     Plug 'tell-k/vim-autopep8'
-    Plug 'davidhalter/jedi-vim'
-    Plug 'zchee/deoplete-jedi'
     " go
     Plug 'fatih/vim-go'
     Plug 'jodosha/vim-godebug'
@@ -24,8 +35,9 @@ call plug#begin('~/.vim/plugged')
     Plug 'othree/jspc.vim'
     Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
     Plug 'wokalski/autocomplete-flow'
+    " deoplete plugins
+    Plug 'zchee/deoplete-jedi'
     " common tools
-    Plug 'Shougo/deoplete.nvim', { 'do': 'UpdateRemotePlugins' }
     Plug 'neomake/neomake'
     Plug 'mtth/scratch.vim'
     Plug 'Lokaltog/powerline'
@@ -77,9 +89,6 @@ au FileType yaml setl ai ts=1 sts=1 sw=1
 
 " java
 au FileType java setl omnifunc=javacomplete#Complete
-
-" Deoplete
-let g:deoplete#enable_at_start_up = 1
 
 " Jedi
 let g:python_host_prog = "/Users/kakaopay/.pyenv/shims/python"
