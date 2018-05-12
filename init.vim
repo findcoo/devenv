@@ -1,5 +1,3 @@
-" neobundle
-
 if &compatible
     set nocompatible
 endif
@@ -25,7 +23,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'godlygeek/tabular'
     Plug 'othree/jspc.vim'
     Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
-    Plug 'flowtype/vim-flow', { 'autoload': { 'filetypes': 'javascript' } }
+    Plug 'wokalski/autocomplete-flow'
     " common tools
     Plug 'Shougo/deoplete.nvim', { 'do': 'UpdateRemotePlugins' }
     Plug 'neomake/neomake'
@@ -33,10 +31,9 @@ call plug#begin('~/.vim/plugged')
     Plug 'Lokaltog/powerline'
     Plug 'Shougo/unite.vim'
     Plug 'ervandew/supertab'
-    Plug 'honza/vim-snippets'
-    Plug 'SirVer/ultisnips'
+    Plug 'Shougo/neosnippet'
+    Plug 'Shougo/neosnippet-snippets'
     Plug 'chase/vim-ansible-yaml'
-    " Plug 'scrooloose/syntastic'
     Plug 'robbles/logstash.vim'
     Plug 'wakatime/vim-wakatime'
     Plug 'junegunn/fzf'
@@ -88,24 +85,28 @@ let g:deoplete#enable_at_start_up = 1
 let g:python_host_prog = "/Users/kakaopay/.pyenv/shims/python"
 let g:python3_host_prog = "/Users/kakaopay/.pyenv/shims/python3"
 
-" if jedi#init_python()
-"     function! s:jedi_auto_force_py_version() abort
-"         let major_version=pyenv#python#get_internal_major_version()
-"         call jedi#force_py_version(major_version)
-"     endfunction
-"     augroup vim-pyenv-custom-augroup
-"         autocmd! *
-"         autocmd User vim-pyenv-activate-post    call s:jedi_auto_force_py_version()
-"         autocmd User vim-pyenv-deactivate-post  call s:jedi_auto_force_py_version()
-"     augroup END
-" endif
+" neosnippet
+let g:neosippet#enable_completed_startup = 1
 
-" UltiSnips
-let g:UltiSnipsExpandTrigger="<s-tab>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-let g:UltiSnipsSnippetsDir="~/.vim/bundle/vim-snippets/UltiSnips"
-let g:UltiSnipsEditSplit="vertical"
+" Plugin key-mappings.
+" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
+
+" SuperTab like snippets behavior.
+" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+"imap <expr><TAB>
+" \ pumvisible() ? "\<C-n>" :
+" \ neosnippet#expandable_or_jumpable() ?
+" \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+
+" For conceal markers.
+if has('conceal')
+  set conceallevel=2 concealcursor=niv
+endif
 
 " golang
 au FileType go nmap <Leader>ds <Plug>(go-def-split)
@@ -164,6 +165,7 @@ au BufNewFile,BufRead Jenkinsfile setf groovy
 " javascript
 autocmd FileType javascript setlocal omnifunc=tern#Complete
 let g:jsx_ext_required = 0
+let g:tern_map_keys = 1
 
 "easymotion
 " You can use other keymappings like <C-l> instead of <CR> if you want to
@@ -333,7 +335,10 @@ call vimfiler#custom#profile('default', 'context', {
             \ })
 
 " neomake
- When writing a buffer (no delay).
+let g:neomake_java_enabled_makers = ['gradle']
+let g:neomake_javascript_enabled_makers = ['eslint']
+let g:neomake_javascript_eslint_exe = system('PATH=$(npm bin):$PATH && which eslint | tr -d "\n"')
+" When writing a buffer (no delay).
 call neomake#configure#automake('w')
 " When writing a buffer (no delay), and on normal mode changes (after 750ms).
 call neomake#configure#automake('nw', 750)
@@ -342,3 +347,4 @@ call neomake#configure#automake('rw', 1000)
 " Full config: when writing or reading a buffer, and on changes in insert and
 " normal mode (after 1s; no delay when writing).
 call neomake#configure#automake('nrwi', 500)
+
