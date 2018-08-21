@@ -4,8 +4,6 @@ if &compatible
     set nocompatible
 endif
 
-" NeoBundleCheck
-
 " Plug
 call plug#begin('~/.vim/plugged')
 if has('nvim')
@@ -16,15 +14,13 @@ else
       Plug 'roxma/vim-hug-neovim-rpc'
 endif
 let g:deoplete#enable_at_startup = 1
-
     " node
     Plug 'moll/vim-node'
     " python
     Plug 'nvie/vim-flake8'
     Plug 'tell-k/vim-autopep8'
     " go
-    Plug 'fatih/vim-go'
-    Plug 'jodosha/vim-godebug'
+    Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
     " java
     Plug 'artur-shaik/vim-javacomplete2'
     " javascript
@@ -38,10 +34,10 @@ let g:deoplete#enable_at_startup = 1
     " deoplete plugins
     Plug 'zchee/deoplete-jedi'
     " common tools
+    Plug 'Shougo/vimproc.vim', { 'do': 'make' }
     Plug 'neomake/neomake'
     Plug 'mtth/scratch.vim'
     Plug 'Lokaltog/powerline'
-    Plug 'Shougo/unite.vim'
     Plug 'ervandew/supertab'
     Plug 'Shougo/neosnippet'
     Plug 'Shougo/neosnippet-snippets'
@@ -62,7 +58,7 @@ let g:deoplete#enable_at_startup = 1
     Plug 'vim-airline/vim-airline'
     Plug 'vim-airline/vim-airline-themes'
     Plug 'dhruvasagar/vim-table-mode'
-    Plug 'Shougo/vimfiler.vim'
+    Plug 'scrooloose/nerdtree'
     Plug 'airblade/vim-rooter'
     " git
     Plug 'tpope/vim-fugitive'
@@ -89,6 +85,7 @@ au FileType yaml setl ai ts=1 sts=1 sw=1
 
 " java
 au FileType java setl omnifunc=javacomplete#Complete
+let g:JavaComplete_JavaviLogfileDirectory = '~/.javacomplete2/'
 
 " Jedi
 let g:python_host_prog = "/Users/kakaopay/.pyenv/shims/python"
@@ -96,12 +93,13 @@ let g:python3_host_prog = "/Users/kakaopay/.pyenv/shims/python3"
 
 " neosnippet
 let g:neosippet#enable_completed_startup = 1
+let g:neosnippet#snippets_directory='~/.vim/plugged/neosnippet-snippets/neosnippets'
 
 " Plugin key-mappings.
 " Note: It must be "imap" and "smap".  It uses <Plug> mappings.
-imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-xmap <C-k>     <Plug>(neosnippet_expand_target)
+imap <C-k> <Plug>(neosnippet_expand_or_jump)
+smap <C-k> <Plug>(neosnippet_expand_or_jump)
+xmap <C-k> <Plug>(neosnippet_expand_target)
 
 " SuperTab like snippets behavior.
 " Note: It must be "imap" and "smap".  It uses <Plug> mappings.
@@ -132,33 +130,33 @@ au FileType go nmap <Leader>rs <Plug>(go-run-split)
 au FileType go nmap <Leader>r <Plug>(go-run-vertical)
 
 au FileType go nmap <Leader>c :GoCallstack<ENTER>
-
-let g:go_fmt_command = "goimports"
-
-let g:go_metalinter_enabled = ['golint', 'errcheck']
-let g:go_metalinter_autosave = 1
-let g:go_metalinter_autosave_enabled = ['golint']
-set autowrite
-let g:go_list_type = "quickfix"
-
+"
+"let g:go_fmt_command = "goimports"
+"
+"let g:go_metalinter_enabled = ['golint', 'errcheck']
+"let g:go_metalinter_autosave = 1
+"let g:go_metalinter_autosave_enabled = ['golint']
+"set autowrite
+"let g:go_list_type = "quickfix"
+"
 map <C-n> :cnext<CR>
 map <C-m> :cprevious<CR>
 nnoremap <leader>a :cclose<CR>
-
+"
 autocmd FileType go nmap <leader>b  <Plug>(go-build)
 autocmd FileType go nmap <leader>r  <Plug>(go-run)
-
+"
 let g:go_highlight_functions = 1
 let g:go_highlight_methods = 1
-
-autocmd FileType go nmap <Leader>i <Plug>(go-info)
-let g:go_auto_type_info = 1
-set updatetime=50
-let g:go_auto_sameids = 1
-let g:go_bin_path = expand("~/.gotools")
-
-let g:syntastic_go_checkers = ['golint', 'errcheck']
-let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
+"
+"autocmd FileType go nmap <Leader>i <Plug>(go-info)
+"let g:go_auto_type_info = 1
+"set updatetime=50
+"let g:go_auto_sameids = 1
+"let g:go_bin_path = expand("~/.gotools")
+"
+"let g:syntastic_go_checkers = ['golint', 'errcheck']
+"let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
 
 " supertab
 let g:SuperTabDefaultCompletionType = 'context'
@@ -227,6 +225,8 @@ let s:jar_path = "~/.vim/bundle/vim-slumloard/plantuml.jar"
 
 " markdown
 let g:vim_markdown_folding_disabled = 1
+let g:vim_markdown_toc_autofit = 1
+let g:vim_markdown_conceal = 0
 augroup emoji_complete
     autocmd!
     autocmd FileType markdown setlocal completefunc=emoji#complete
@@ -234,114 +234,6 @@ augroup END
 
 " scratch
 let g:scratch_autohide = 1
-
-" unite
-if executable('hw')
-    " Use hw (highway)
-    " https://github.com/tkengo/highway
-    let g:unite_source_grep_command = 'hw'
-    let g:unite_source_grep_default_opts = '--no-group --no-color'
-    let g:unite_source_grep_recursive_opt = ''
-elseif executable('ag')
-    " Use ag (the silver searcher)
-    " https://github.com/ggreer/the_silver_searcher
-    let g:unite_source_grep_command = 'ag'
-    let g:unite_source_grep_default_opts =
-                \ '-i --line-numbers --nocolor ' .
-                \ '--nogroup --hidden --ignore ' .
-                \ '''.hg'' --ignore ''.svn'' --ignore' .
-                \ ' ''.git'' --ignore ''.bzr'''
-    let g:unite_source_grep_recursive_opt = ''
-elseif executable('pt')
-    " Use pt (the platinum searcher)
-    " https://github.com/monochromegane/the_platinum_searcher
-    let g:unite_source_grep_command = 'pt'
-    let g:unite_source_grep_default_opts = '--nogroup --nocolor'
-    let g:unite_source_grep_recursive_opt = ''
-elseif executable('ack-grep')
-    " Use ack
-    " http://beyondgrep.com/
-    let g:unite_source_grep_command = 'ack-grep'
-    let g:unite_source_grep_default_opts =
-                \ '-i --no-heading --no-color -k -H'
-    let g:unite_source_grep_recursive_opt = ''
-elseif executable('ack')
-    let g:unite_source_grep_command = 'ack'
-    let g:unite_source_grep_default_opts = '-i --no-heading' .
-                \ ' --no-color -k -H'
-    let g:unite_source_grep_recursive_opt = ''
-elseif executable('jvgrep')
-    " Use jvgrep
-    " https://github.com/mattn/jvgrep
-    let g:unite_source_grep_command = 'jvgrep'
-    let g:unite_source_grep_default_opts =
-                \ '-i --exclude ''\.(git|svn|hg|bzr)'''
-    let g:unite_source_grep_recursive_opt = '-R'
-elseif executable('beagrep')
-    " Use beagrep
-    " https://github.com/baohaojun/beagrep
-    let g:unite_source_grep_command = 'beagrep'
-endif
-
-let g:unite_source_menu_menus = get(g:,'unite_source_menu_menus',{})
-let g:unite_source_menu_menus.git = {
-    \ 'description' : '            gestionar repositorios git
-        \                            ⌘ [espacio]g',
-    \}
-let g:unite_source_menu_menus.git.command_candidates = [
-    \['▷ tig                                                        ⌘ ,gt',
-        \'normal ,gt'],
-    \['▷ git status       (Fugitive)                                ⌘ ,gs',
-        \'Gstatus'],
-    \['▷ git diff         (Fugitive)                                ⌘ ,gd',
-        \'Gdiff'],
-    \['▷ git commit       (Fugitive)                                ⌘ ,gc',
-        \'Gcommit'],
-    \['▷ git log          (Fugitive)                                ⌘ ,gl',
-        \'exe "silent Glog | Unite quickfix"'],
-    \['▷ git blame        (Fugitive)                                ⌘ ,gb',
-        \'Gblame'],
-    \['▷ git stage        (Fugitive)                                ⌘ ,gw',
-        \'Gwrite'],
-    \['▷ git checkout     (Fugitive)                                ⌘ ,go',
-        \'Gread'],
-    \['▷ git rm           (Fugitive)                                ⌘ ,gr',
-        \'Gremove'],
-    \['▷ git mv           (Fugitive)                                ⌘ ,gm',
-        \'exe "Gmove " input("destino: ")'],
-    \['▷ git push         (Fugitive, salida por buffer)             ⌘ ,gp',
-        \'Git! push'],
-    \['▷ git pull         (Fugitive, salida por buffer)             ⌘ ,gP',
-        \'Git! pull'],
-    \['▷ git prompt       (Fugitive, salida por buffer)             ⌘ ,gi',
-        \'exe "Git! " input("comando git: ")'],
-    \['▷ git cd           (Fugitive)',
-        \'Gcd'],
-    \]
-
-nnoremap <silent> <space>g :Unite -silent -start-insert menu:git<CR>
-nnoremap <silent> <C-p> :Unite file_rec<cr>
-nnoremap <silent> <space>/ :Unite grep<cr> 
-
-" vimfiler
-let g:vimfiler_as_default_explorer = 1
-call vimfiler#custom#profile('default', 'context', {
-            \ 'explorer' : 1,
-            \ 'winwidth' : 30,
-            \ 'winminwidth' : 30,
-            \ 'toggle' : 1,
-            \ 'columns' : 'type',
-            \ 'auto_expand': 1,
-            \ 'direction' : 'rightbelow',
-            \ 'parent': 0,
-            \ 'explorer_columns' : 'type',
-            \ 'status' : 1,
-            \ 'safe' : 0,
-            \ 'split' : 1,
-            \ 'hidden': 1,
-            \ 'no_quit' : 1,
-            \ 'force_hide' : 0,
-            \ })
 
 " neomake
 let g:neomake_java_enabled_makers = ['gradle']
@@ -357,3 +249,8 @@ call neomake#configure#automake('rw', 1000)
 " normal mode (after 1s; no delay when writing).
 call neomake#configure#automake('nrwi', 500)
 
+" NerdTree
+map <C-n> :NERDTreeToggle<CR>
+
+" FZF
+nmap <C-p> :FZF<CR>
