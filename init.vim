@@ -130,33 +130,14 @@ au FileType go nmap <Leader>rs <Plug>(go-run-split)
 au FileType go nmap <Leader>r <Plug>(go-run-vertical)
 
 au FileType go nmap <Leader>c :GoCallstack<ENTER>
-"
-"let g:go_fmt_command = "goimports"
-"
-"let g:go_metalinter_enabled = ['golint', 'errcheck']
-"let g:go_metalinter_autosave = 1
-"let g:go_metalinter_autosave_enabled = ['golint']
-"set autowrite
-"let g:go_list_type = "quickfix"
-"
+
 map <C-n> :cnext<CR>
 map <C-m> :cprevious<CR>
 nnoremap <leader>a :cclose<CR>
-"
 autocmd FileType go nmap <leader>b  <Plug>(go-build)
 autocmd FileType go nmap <leader>r  <Plug>(go-run)
-"
 let g:go_highlight_functions = 1
 let g:go_highlight_methods = 1
-"
-"autocmd FileType go nmap <Leader>i <Plug>(go-info)
-"let g:go_auto_type_info = 1
-"set updatetime=50
-"let g:go_auto_sameids = 1
-"let g:go_bin_path = expand("~/.gotools")
-"
-"let g:syntastic_go_checkers = ['golint', 'errcheck']
-"let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
 
 " supertab
 let g:SuperTabDefaultCompletionType = 'context'
