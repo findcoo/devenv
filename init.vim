@@ -88,8 +88,8 @@ au FileType java setl omnifunc=javacomplete#Complete
 let g:JavaComplete_JavaviLogfileDirectory = '~/.javacomplete2/'
 
 " Jedi
-let g:python_host_prog = "/Users/kakaopay/.pyenv/shims/python"
-let g:python3_host_prog = "/Users/kakaopay/.pyenv/shims/python3"
+let g:python_host_prog = "/home/findcoo/.pyenv/shims/python"
+let g:python3_host_prog = "/home/findcoo/.pyenv/shims/python3"
 
 " neosnippet
 let g:neosippet#enable_completed_startup = 1
