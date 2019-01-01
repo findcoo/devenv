@@ -1,5 +1,4 @@
 " neobundle
-
 if &compatible
     set nocompatible
 endif
@@ -21,13 +20,10 @@ let g:deoplete#enable_at_startup = 1
     Plug 'tell-k/vim-autopep8'
     " go
     Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
-    " java
-    Plug 'artur-shaik/vim-javacomplete2'
     " javascript
     Plug 'mattn/emmet-vim'
     Plug 'pangloss/vim-javascript'
     Plug 'mxw/vim-jsx'
-    Plug 'godlygeek/tabular'
     Plug 'othree/jspc.vim'
     Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
     Plug 'wokalski/autocomplete-flow'
@@ -35,6 +31,7 @@ let g:deoplete#enable_at_startup = 1
     Plug 'zchee/deoplete-jedi'
     " common tools
     Plug 'Shougo/vimproc.vim', { 'do': 'make' }
+    Plug 'alcesleo/vim-uppercase-sql'
     Plug 'neomake/neomake'
     Plug 'mtth/scratch.vim'
     Plug 'Lokaltog/powerline'
@@ -45,11 +42,6 @@ let g:deoplete#enable_at_startup = 1
     Plug 'robbles/logstash.vim'
     Plug 'wakatime/vim-wakatime'
     Plug 'junegunn/fzf'
-    Plug 'junegunn/fzf.vim'
-    Plug 'haya14busa/incsearch.vim'
-    Plug 'haya14busa/incsearch-fuzzy.vim'
-    Plug 'haya14busa/incsearch-easymotion.vim'
-    Plug 'easymotion/vim-easymotion'
     Plug 'junegunn/vim-emoji'
     Plug 'mzlogin/vim-markdown-toc'
     Plug 'aklt/plantuml-syntax'
@@ -60,6 +52,10 @@ let g:deoplete#enable_at_startup = 1
     Plug 'dhruvasagar/vim-table-mode'
     Plug 'scrooloose/nerdtree'
     Plug 'airblade/vim-rooter'
+    Plug 'vim-scripts/SQLUtilities'
+    Plug 'junegunn/vim-easy-align'
+    Plug 'tpope/vim-surround'
+    Plug 'w0rp/ale'
     " git
     Plug 'tpope/vim-fugitive'
     Plug 'airblade/vim-gitgutter'
@@ -70,26 +66,20 @@ syntax enable
 " text editing
 set nu
 set autochdir
+set cursorline
+set synmaxcol=128
+set re=1
 syntax on
 
-set tabstop=4 softtabstop=4 shiftwidth=4 expandtab autoindent fileformat=unix
-au FileType go set tabstop=2 softtabstop=2 shiftwidth=2 expandtab autoindent
-au FileType javascript set tabstop=2 softtabstop=2 shiftwidth=2 expandtab autoindent
+set tabstop=4 softtabstop=4 shiftwidth=4 expandtab autoindent fileformat=unix smartindent
 au FileType python set textwidth=79
 
-set cursorline
 hi CursorLine term=bold cterm=bold guibg=Grey40
 highlight LineNr ctermfg=grey
 
-au FileType yaml setl ai ts=1 sts=1 sw=1
-
-" java
-au FileType java setl omnifunc=javacomplete#Complete
-let g:JavaComplete_JavaviLogfileDirectory = '~/.javacomplete2/'
-
 " Jedi
-let g:python_host_prog = "/home/findcoo/.pyenv/shims/python"
-let g:python3_host_prog = "/home/findcoo/.pyenv/shims/python3"
+let g:python_host_prog = "/Users/kakaopay/.pyenv/shims/python"
+let g:python3_host_prog = "/Users/kakaopay/.pyenv/shims/python3"
 
 " neosnippet
 let g:neosippet#enable_completed_startup = 1
@@ -131,21 +121,11 @@ au FileType go nmap <Leader>r <Plug>(go-run-vertical)
 
 au FileType go nmap <Leader>c :GoCallstack<ENTER>
 
-map <C-n> :cnext<CR>
-map <C-m> :cprevious<CR>
-nnoremap <leader>a :cclose<CR>
-autocmd FileType go nmap <leader>b  <Plug>(go-build)
-autocmd FileType go nmap <leader>r  <Plug>(go-run)
-let g:go_highlight_functions = 1
-let g:go_highlight_methods = 1
-
 " supertab
 let g:SuperTabDefaultCompletionType = 'context'
 let g:SuperTabClosePreviewOnPopupClose = 1
-
-" java
-au FileType java nmap <Leader>d :JavaSearch -a edit<ENTER>
-au FileType java nmap <Leader>s :JavaSearch -a vsplit<ENTER>
+au FileTYpe javascript let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
+set completeopt-=preview
 
 " Jenkinsfile
 au BufNewFile,BufRead Jenkinsfile setf groovy
@@ -154,54 +134,10 @@ au BufNewFile,BufRead Jenkinsfile setf groovy
 autocmd FileType javascript setlocal omnifunc=tern#Complete
 let g:jsx_ext_required = 0
 let g:tern_map_keys = 1
+au FileType javascript nmap <silent>gd :TernDef<CR>
+au FileType javascript nmap <silent>gp :TernDefPreview<CR>
 
-"easymotion
-" You can use other keymappings like <C-l> instead of <CR> if you want to
-" use these mappings as default search and somtimes want to move cursor with
-" EasyMotion.
-" <Leader>f{char} to move to {char}
-map  <Leader>f <Plug>(easymotion-bd-f)
-nmap <Leader>f <Plug>(easymotion-overwin-f)
-
-" s{char}{char} to move to {char}{char}
-nmap s <Plug>(easymotion-overwin-f2)
-
-" Move to line
-map <Leader>L <Plug>(easymotion-bd-jk)
-nmap <Leader>L <Plug>(easymotion-overwin-line)
-
-" Move to word
-map  <Leader>w <Plug>(easymotion-bd-w)
-nmap <Leader>w <Plug>(easymotion-overwin-w)
-
-function! s:incsearch_config(...) abort
-  return incsearch#util#deepextend(deepcopy({
-  \   'modules': [incsearch#config#easymotion#module({'overwin': 1})],
-  \   'keymap': {
-  \     "\<CR>": '<Over>(easymotion)'
-  \   },
-  \   'is_expr': 0
-  \ }), get(a:, 1, {}))
-endfunction
-
-noremap <silent><expr> /  incsearch#go(<SID>incsearch_config())
-noremap <silent><expr> ?  incsearch#go(<SID>incsearch_config({'command': '?'}))
-noremap <silent><expr> g/ incsearch#go(<SID>incsearch_config({'is_stay': 1}))
-
-function! s:config_easyfuzzymotion(...) abort
-  return extend(copy({
-  \   'converters': [incsearch#config#fuzzyword#converter()],
-  \   'modules': [incsearch#config#easymotion#module({'overwin': 1})],
-  \   'keymap': {"\<CR>": '<Over>(easymotion)'},
-  \   'is_expr': 0,
-  \   'is_stay': 1
-  \ }), get(a:, 1, {}))
-endfunction
-
-noremap <silent><expr> <Space>/ incsearch#go(<SID>config_easyfuzzymotion())
-
-set guicursor=
-
+" plantuml
 let s:jar_path = "~/.vim/bundle/vim-slumloard/plantuml.jar"
 
 " markdown
@@ -235,3 +171,22 @@ map <C-n> :NERDTreeToggle<CR>
 
 " FZF
 nmap <C-p> :FZF<CR>
+
+" SQLUtilities
+au FileType sql vmap <silent>sf        <Plug>SQLU_Formatter<CR>
+au FileType sql nmap <silent>scl       <Plug>SQLU_CreateColumnList<CR>
+au FileType sql nmap <silent>scd       <Plug>SQLU_GetColumnDef<CR>
+au FileType sql nmap <silent>scdt      <Plug>SQLU_GetColumnDataType<CR>
+au FileType sql nmap <silent>scp       <Plug>SQLU_CreateProcedure<CR>
+
+" airline
+let g:airline#extensions#ale#enabled = 1
+
+" golang
+let g:go_auto_sameids = 1
+let g:go_fmt_command = "goimports"
+" Error and warning signs.
+let g:ale_sign_error = '⤫'
+let g:ale_sign_warning = '⚠'
+let g:go_addtags_transform = "snakecase"
+let g:go_snippet_engine = "neosnippet"
